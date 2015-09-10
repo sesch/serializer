@@ -46,6 +46,7 @@ final class GraphNavigator
     private $metadataFactory;
     private $handlerRegistry;
     private $objectConstructor;
+    private $mode = 'default';
 
     /**
      * Parses a direction string to one of the direction constants.
@@ -230,10 +231,19 @@ final class GraphNavigator
                     if ($context instanceof DeserializationContext && $propertyMetadata->readOnly) {
                         continue;
                     }
-
-                    $context->pushPropertyMetadata($propertyMetadata);
-                    $visitor->visitProperty($propertyMetadata, $data, $context);
-                    $context->popPropertyMetadata();
+                    $visit = true;
+                    if($this->mode !== 'default' && array_key_exists("modified", $data) && $object->getModified()) {
+                        $remoteModified = new \DateTime($data["modified"]);
+                        $localModified  = $object->getModified();
+                        if($remoteModified < $localModified) {
+                            $visit = false;
+                        }
+                    }
+                    if($visit) {
+                        $context->pushPropertyMetadata($propertyMetadata);
+                        $visitor->visitProperty($propertyMetadata, $data, $context);
+                        $context->popPropertyMetadata();
+                    }
                 }
 
                 if ($context instanceof SerializationContext) {
@@ -313,5 +323,9 @@ final class GraphNavigator
         if (null !== $this->dispatcher && $this->dispatcher->hasListeners('serializer.post_deserialize', $metadata->name, $context->getFormat())) {
             $this->dispatcher->dispatch('serializer.post_deserialize', $metadata->name, $context->getFormat(), new ObjectEvent($context, $object, $type));
         }
+    }
+
+    public function setMode($mode) {
+        $this->mode = $mode;
     }
 }

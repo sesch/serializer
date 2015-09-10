@@ -207,4 +207,8 @@ class Serializer implements SerializerInterface
     {
         return $this->factory;
     }
+
+    public function setMode($mode) {
+        $this->navigator->setMode($mode);
+    }
 }
