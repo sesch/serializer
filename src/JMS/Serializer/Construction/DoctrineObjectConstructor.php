@@ -30,7 +30,7 @@ class DoctrineObjectConstructor implements ObjectConstructorInterface
 {
     private $managerRegistry;
     private $fallbackConstructor;
-    private $mode == 'default';
+    private $mode = 'default';
 
     /**
      * Constructor.
