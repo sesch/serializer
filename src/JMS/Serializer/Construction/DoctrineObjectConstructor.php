@@ -30,6 +30,7 @@ class DoctrineObjectConstructor implements ObjectConstructorInterface
 {
     private $managerRegistry;
     private $fallbackConstructor;
+    private $mode == 'default';
 
     /**
      * Constructor.
@@ -85,8 +86,17 @@ class DoctrineObjectConstructor implements ObjectConstructorInterface
         // Entity update, load it from database
         $object = $objectManager->find($metadata->name, $identifierList);
 
+        if($this->mode !== 'default' && $object == null) {
+            $r = new \ReflectionClass($metadata->name);
+            $object = $r->newInstanceArgs();
+        }
+
         $objectManager->initializeObject($object);
 
         return $object;
+    }
+
+    public function setMode($mode) {
+        $this->mode = $mode;
     }
 }

@@ -210,5 +210,6 @@ class Serializer implements SerializerInterface
 
     public function setMode($mode) {
         $this->navigator->setMode($mode);
+        $this->objectConstructor->setMode($mode);
     }
 }
