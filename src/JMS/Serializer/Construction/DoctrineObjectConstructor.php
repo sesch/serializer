@@ -86,7 +86,14 @@ class DoctrineObjectConstructor implements ObjectConstructorInterface
         // Entity update, load it from database
         $object = $objectManager->find($metadata->name, $identifierList);
 
-        if($this->mode !== 'default' && $object == null) {
+        $deletion = false;
+        if($this->mode !== 'default' && $identifierList && is_array($identifierList) && array_key_exists("id", $identifierList)) {
+            if($object == null && intval($identifierList['id'])) {
+                $deletion = true;
+            }
+        }
+
+        if($this->mode !== 'default' && $object == null && !$deletion) {
             $r = new \ReflectionClass($metadata->name);
             $object = $r->newInstanceArgs();
         }

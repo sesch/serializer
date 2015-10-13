@@ -239,7 +239,7 @@ final class GraphNavigator
                             $visit = false;
                         }
                     }
-                    if($visit) {
+                    if(($visit && $this->mode == 'default') ||  ($visit && $this->mode !== 'default' && $object !== null)) {
                         $context->pushPropertyMetadata($propertyMetadata);
                         $visitor->visitProperty($propertyMetadata, $data, $context);
                         $context->popPropertyMetadata();

@@ -127,6 +127,9 @@ abstract class GenericDeserializationVisitor extends AbstractVisitor
                 foreach ($data as $v) {
                     $result[] = $this->navigator->accept($v, $listType, $context);
                 }
+                if($result == array(null)) {
+                    $result = array();
+                }
 
                 return $result;
 
