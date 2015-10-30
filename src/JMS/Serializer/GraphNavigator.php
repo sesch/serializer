@@ -232,7 +232,7 @@ final class GraphNavigator
                         continue;
                     }
                     $visit = true;
-                    if($this->mode !== 'default' && array_key_exists("modified", $data) && $object->getModified()) {
+                    if($this->mode !== 'default' && array_key_exists("modified", $data) && $object !== null && $object->getModified()) {
                         $remoteModified = new \DateTime($data["modified"]);
                         $localModified  = $object->getModified();
                         if($remoteModified < $localModified) {
